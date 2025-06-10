@@ -178,7 +178,7 @@
         // Fungsi untuk update UI
         async function updateDashboard() {
             try {
-                const response = await fetch('https://yfrffzjmpvoeonvyflnk.supabase.co/rest/v1/sensor_data?order=created_at.desc&limit=10', {
+                const response = await fetch('https://yfrffzjmpvoeonvyflnk.supabase.co/rest/v1/sensor_data?order=created_at.desc&limit=1', {
                     headers: {
                         'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmcmZmemptcHZvZW9udnlmbG5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjIzMTUsImV4cCI6MjA2NTA5ODMxNX0.9B9g_Psjo7n2Nx3f8ZoPuMv6HiwLzOfOc8EdywrRn_E',
                         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmcmZmemptcHZvZW9udnlmbG5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjIzMTUsImV4cCI6MjA2NTA5ODMxNX0.9B9g_Psjo7n2Nx3f8ZoPuMv6HiwLzOfOc8EdywrRn_E'
@@ -216,6 +216,24 @@
                 console.error('Error fetching data:', error);
             }
         }
+
+         async function loadInitialData() {
+            try {
+                const response = await fetch('https://yfrffzjmpvoeonvyflnk.supabase.co/rest/v1/sensor_data?order=created_at.desc&limit=10', {
+                    headers: {
+                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmcmZmemptcHZvZW9udnlmbG5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjIzMTUsImV4cCI6MjA2NTA5ODMxNX0.9B9g_Psjo7n2Nx3f8ZoPuMv6HiwLzOfOc8EdywrRn_E',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmcmZmemptcHZvZW9udnlmbG5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjIzMTUsImV4cCI6MjA2NTA5ODMxNX0.9B9g_Psjo7n2Nx3f8ZoPuMv6HiwLzOfOc8EdywrRn_E'
+                    }
+                });
+
+                const data = await response.json();
+                data.forEach(item => {
+                    chart.data.labels.push(new Date(item.created_at).toLocaleTimeString());
+                    chart.data.datasets[0].data.push(item.heartRate ?? null);
+                });
+                chart.update();
+            }
+         }
 
         // Fungsi deteksi anomali
         function checkAnomalies(metrics) {
